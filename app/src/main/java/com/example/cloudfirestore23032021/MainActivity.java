@@ -112,20 +112,31 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
         //2 : Đoc dữ liệu dang mảng
-        DocumentReference arrRef = db.collection("mangten").document("array");
-        arrRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//        DocumentReference arrRef = db.collection("mangten").document("array");
+//        arrRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                if (value != null && value.exists()){
+//                    Map<String,Object> mapData = value.getData();
+//                    Iterator iterator = mapData.keySet().iterator();
+//                    while (iterator.hasNext()){
+//                        Log.d("BBB",mapData.get(iterator.next()).toString());
+//                    }
+//                }
+//            }
+//        });
+
+        // 3 Dang Object
+        DocumentReference objectRef  = db.collection("animal").document("athome");
+        objectRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (value != null && value.exists()){
-                    Map<String,Object> mapData = value.getData();
-                    Iterator iterator = mapData.keySet().iterator();
-                    while (iterator.hasNext()){
-                        Log.d("BBB",mapData.get(iterator.next()).toString());
-                    }
+                    Animal animal = value.toObject(Animal.class);
+                    Log.d("BBB",animal.toString());
                 }
             }
         });
-
 
     }
 }
