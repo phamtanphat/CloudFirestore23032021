@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -95,20 +97,35 @@ public class MainActivity extends AppCompatActivity {
         /* ================================================================ */
 
         // 1  Doc du lieu dang string
-        DocumentReference khoahocRef =  db.collection("khoahoc").document("android");
-        khoahocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//        DocumentReference khoahocRef =  db.collection("khoahoc").document("android");
+//        khoahocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                String chuoi = "";
+//                if (value != null && value.exists()) {
+//                    chuoi = (String) value.getData().get("ten");
+//                    Toast.makeText(MainActivity.this, chuoi, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    System.out.print("Current data: null");
+//                }
+//
+//            }
+//        });
+        //2 : Đoc dữ liệu dang mảng
+        DocumentReference arrRef = db.collection("mangten").document("array");
+        arrRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                String chuoi = "";
-                if (value != null && value.exists()) {
-                    chuoi = (String) value.getData().get("ten");
-                    Toast.makeText(MainActivity.this, chuoi, Toast.LENGTH_SHORT).show();
-                } else {
-                    System.out.print("Current data: null");
+                if (value != null && value.exists()){
+                    Map<String,Object> mapData = value.getData();
+                    Iterator iterator = mapData.keySet().iterator();
+                    while (iterator.hasNext()){
+                        Log.d("BBB",mapData.get(iterator.next()).toString());
+                    }
                 }
-
             }
         });
+
 
     }
 }
