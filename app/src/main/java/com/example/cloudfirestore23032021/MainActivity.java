@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
         // 4  : Đọc dữ liệu dạng list document
 
-        db.collection("product").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("product").whereEqualTo("name","product2").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
