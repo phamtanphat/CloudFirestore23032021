@@ -1,12 +1,11 @@
 package com.example.cloudfirestore23032021;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -15,12 +14,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -127,13 +123,39 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         // 3 Dang Object
-        DocumentReference objectRef  = db.collection("animal").document("athome");
-        objectRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//        DocumentReference objectRef  = db.collection("animal").document("athome");
+//        objectRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                if (value != null && value.exists()){
+//                    Animal animal = value.toObject(Animal.class);
+//                    Log.d("BBB",animal.toString());
+//                }
+//            }
+//        });
+        // 4  : Đọc dữ liệu dạng list document
+
+        db.collection("product").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (value != null && value.exists()){
-                    Animal animal = value.toObject(Animal.class);
-                    Log.d("BBB",animal.toString());
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (DocumentSnapshot snapshot: task.getResult().getDocuments()) {
+                        Map<String,Object> objectMap = snapshot.getData();
+                        Iterator iterator = objectMap.keySet().iterator();
+                        String name = "";
+                        String price = "";
+                        while (iterator.hasNext()){
+                            String key = iterator.next().toString();
+                            if (key.equals("price")){
+                                price = objectMap.get(key).toString();
+                            }else{
+                                name = objectMap.get(key).toString();
+                            }
+                        }
+                        Log.d("BBB","Document SnapShoot " + snapshot.getId());
+                        Log.d("BBB", "Name " + name);
+                        Log.d("BBB", "Price " + price);
+                    }
                 }
             }
         });
